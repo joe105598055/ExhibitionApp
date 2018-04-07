@@ -102,8 +102,7 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
     @Override
     public void getNearestBeacon(BeaconObject beaconObject) {
 
-        System.out.println("---------------[getNearestBeacon]");
-        System.out.println("[setting]" + beaconObject.getMajorMinorString());
+        Log.d(TAG, "[getNearestBeacon]" + beaconObject.getMajorMinorString());
 
     }
 
