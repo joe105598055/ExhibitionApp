@@ -5,15 +5,21 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import tech.onetime.exhibitionDemo.R;
@@ -30,6 +36,7 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
     private static final String TAG = "SettingActivity";
 
     private BeaconScanCallback _beaconCallback;
+    @ViewById ImageView areaImage;
 
     static final int REQUEST_ENABLE_BT = 1001; // The request code
 
@@ -39,7 +46,7 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
 
         Log.d(TAG, "afterViews");
         if(bleInit()){
-            System.out.println("[bleInit] true");
+            Log.d(TAG, "[bleInit] true");
         }
 
     }
@@ -103,7 +110,42 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
     public void getNearestBeacon(BeaconObject beaconObject) {
 
         Log.d(TAG, "[getNearestBeacon]" + beaconObject.getMajorMinorString());
+        switch (beaconObject.getMajorMinorString()){
+            case "(0,5)":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/A.png");
+                break;
+            case "(5,5)":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/B.png");
+                break;
+            case "(8,5)":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/C.png");
+                break;
+        }
+    }
 
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
     @Override
