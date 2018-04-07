@@ -17,13 +17,10 @@ public class PositionAlgorithm {
     private ArrayList<BeaconObject> beacons = new ArrayList<>();
     private int logarithm, power;
 
-    public PositionAlgorithm(ArrayList<BeaconObject> beacons, int power, int logarithm) {
+    public PositionAlgorithm(ArrayList<BeaconObject> beacons) {
         this.beacons = beacons;
-        this.logarithm = logarithm;
-        this.power = power;
 //        for (int i = 0; i < beacons.size(); i++)
 //            Log.d(TAG,Integer.toString(i) + Integer.toString(beacons.get(i).rssi));
-        sortBeacons();
     }
 
     /**

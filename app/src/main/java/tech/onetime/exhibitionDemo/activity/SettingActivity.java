@@ -12,6 +12,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
@@ -20,7 +21,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import tech.onetime.exhibitionDemo.R;
 import tech.onetime.exhibitionDemo.ble.BeaconScanCallback;
@@ -37,6 +37,7 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
 
     private BeaconScanCallback _beaconCallback;
     @ViewById ImageView areaImage;
+    @ViewById TextView times;
 
     static final int REQUEST_ENABLE_BT = 1001; // The request code
 
@@ -106,21 +107,12 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
         /**To do  each beaconObject be scanned */
     }
 
+    int roundTimes = 0;
     @Override
     public void getNearestBeacon(BeaconObject beaconObject) {
 
-        Log.d(TAG, "[getNearestBeacon]" + beaconObject.getMajorMinorString());
-        switch (beaconObject.getMajorMinorString()){
-            case "(0,5)":
-                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/A.png");
-                break;
-            case "(5,5)":
-                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/B.png");
-                break;
-            case "(8,5)":
-                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/C.png");
-                break;
-        }
+        times.setText(Integer.toString(++roundTimes));
+
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -148,9 +140,22 @@ public class SettingActivity extends AppCompatActivity implements BeaconScanCall
         }
     }
 
-    @Override
-    public void getCurrentRoundBeacon(ArrayList<BeaconObject> BeaconObjectArray) {
 
+    @Override
+    public void getCurrentPosition(String position) {
+        Log.d(TAG, "************************getCurrentPosition: " + position);
+        roundTimes = 0;
+        switch (position){
+            case "A":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/A.png");
+                break;
+            case "B":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/B.png");
+                break;
+            case "C":
+                new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/C.png");
+                break;
+        }
     }
 
     protected void onDestroy(){

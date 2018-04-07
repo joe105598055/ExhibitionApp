@@ -31,6 +31,8 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     private BluetoothAdapter mBluetoothAdapter;
     private ScanFilter.Builder _filterBuilder;
     private long lastScannedTime = 0;
+    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
+
 
     public BeaconScanCallback(Context ctx, iBeaconScanCallback scanCallback) {
 
@@ -47,8 +49,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
         void getNearestBeacon(BeaconObject beaconObject);
 
-        void getCurrentRoundBeacon(ArrayList<BeaconObject> BeaconObjectArray);
-
+        void getCurrentPosition(String position);
 
     }
 
@@ -72,8 +73,6 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
         kitkatLeScanCallback = new KitkatScanCallback(this);
         mBluetoothAdapter.startLeScan(kitkatLeScanCallback);
-
-//        scanning = true;
 
     }
 
@@ -155,8 +154,6 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
                     kitkatLeScanCallback.stopDetect();
             }
 
-//            scanning = false;
-
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -165,22 +162,24 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     }
 
-//    public boolean isScanning() {
-//
-//        return scanning;
-//
-//    }
+
+
     private  void returnCallback(){
         if (!canReturnCallback()){
             return;
         }
-
         scanCallback.getNearestBeacon(syncBeacons.getIns().getNearest());
-        scanCallback.getCurrentRoundBeacon(syncBeacons.getIns().getBeacons());
+        eachRoundBeacon.add(syncBeacons.getIns().getNearest());
+        if(eachRoundBeacon.size() == 10){
+            String currentPosition = new ScoringAlgorithm(eachRoundBeacon).getCurrentPosition();
+            scanCallback.getCurrentPosition(currentPosition);
+            Log.d(TAG,"currentPosition = " + currentPosition);
+            eachRoundBeacon.clear();
+        }
         syncBeacons.getIns().removeAllBeacons();
 
-
     }
+
     private static class syncBeacons {
 
         private static syncBeacons ins = null;
@@ -234,7 +233,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
             return false;
         }
 
-        if (currentScannedTime - lastScannedTime > 500) {
+        if (currentScannedTime - lastScannedTime > 200) {
             lastScannedTime = currentScannedTime;
             return true;
         } else {
