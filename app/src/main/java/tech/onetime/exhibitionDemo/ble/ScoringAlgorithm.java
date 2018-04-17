@@ -25,18 +25,34 @@ public class ScoringAlgorithm {
         for(int i = 0,count = 0; i < positionList.size(); i++){
             Log.d(TAG,positionList.get(i));
             if(count == 0){
-                count++;
                 candidate = positionList.get(i);
+                count = 1;
             }else if(candidate != positionList.get(i)){
                 count--;
             }else{
                 count++;
             }
         }
-        return candidate;
-        //TODO check candidate is majority element
+        if(isMajorityElement(candidate))
+            return candidate;
+        else
+            return "not majority";
+
+        //return candidate;
+
     }
 
+    private Boolean isMajorityElement(String candidate){
+        int count = 0;
+        for(int i = 0; i < positionList.size(); i++){
+            if(candidate == positionList.get(i))
+                count++;
+        }
+        if(count > positionList.size()/2)
+            return true;
+        else
+            return false;
+    }
     private void mappingPosition (){
 
 

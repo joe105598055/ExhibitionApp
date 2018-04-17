@@ -107,8 +107,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="socket.io-client-0.8.1" level="project" />
     <orderEntry type="library" exported="" name="socket.io-client-0.4.1" level="project" />
-    <orderEntry type="library" exported="" name="core-3.2.1" level="project" />
     <orderEntry type="library" exported="" name="spring-android-rest-template-2.0.0.M3" level="project" />
+    <orderEntry type="library" exported="" name="core-3.2.1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.2.0" level="project" />
     <orderEntry type="library" exported="" name="json-1.5-20090211" level="project" />
     <orderEntry type="library" exported="" name="core-1.8.4" level="project" />
