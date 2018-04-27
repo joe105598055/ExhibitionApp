@@ -28,7 +28,7 @@ public class InitActivityV3 extends AppCompatActivity{
 
         Log.d(TAG, "Setting");
 
-        Intent intent = new Intent(this, SettingActivity_.class);
+        Intent intent = new Intent(this, ExhibitionActivity_.class);
         startActivityForResult(intent, SETTING_REQUEST);
 
     }

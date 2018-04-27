@@ -28,13 +28,9 @@
             </intent-filter>
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-
-        <activity android:name="tech.onetime.exhibitionDemo.activity.SettingActivity_"
+        <activity android:name="tech.onetime.exhibitionDemo.activity.ExhibitionActivity_"
             android:screenOrientation="portrait">
         </activity>
-
-
-
 
     </application>
 

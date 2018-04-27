@@ -31,7 +31,9 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     private BluetoothAdapter mBluetoothAdapter;
     private ScanFilter.Builder _filterBuilder;
     private long lastScannedTime = 0;
-    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
+//    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
+    private ArrayList<ArrayList<BeaconObject>> eachRoundBeacon = new ArrayList<>();
+
 
 
     public BeaconScanCallback(Context ctx, iBeaconScanCallback scanCallback) {
@@ -163,14 +165,13 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     }
 
 
-
     private  void returnCallback(){
         if (!canReturnCallback()){
             return;
         }
         scanCallback.getNearestBeacon(syncBeacons.getIns().getNearest());
-        eachRoundBeacon.add(syncBeacons.getIns().getNearest());
-        if(eachRoundBeacon.size() == 10){
+        eachRoundBeacon.add(syncBeacons.getIns().getBeacons());
+        if(eachRoundBeacon.size() == 10){ // 10 round後，根據scoring result 判斷位置
             String currentPosition = new ScoringAlgorithm(eachRoundBeacon).getCurrentPosition();
             scanCallback.getCurrentPosition(currentPosition);
             Log.d(TAG,"currentPosition = " + currentPosition);
@@ -233,7 +234,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
             return false;
         }
 
-        if (currentScannedTime - lastScannedTime > 200) {
+        if (currentScannedTime - lastScannedTime > 100) { // updateTime
             lastScannedTime = currentScannedTime;
             return true;
         } else {
