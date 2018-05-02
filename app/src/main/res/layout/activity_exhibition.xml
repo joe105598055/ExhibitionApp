@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Times"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/areaImage"
+        android:gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="300dp"
+        android:minWidth="300dp"
+        android:layout_marginBottom="91dp"
+        android:layout_above="@+id/exit"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.03"
+        android:background="@drawable/rounded_rec_primary_color"
+        android:text="@string/exit"
+        android:layout_marginBottom="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/active"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/exit"
+        android:layout_alignEnd="@+id/times"
+        android:layout_marginBottom="51dp"
+        android:text="This is Active" />
+
+    <TextView
+        android:id="@+id/resultA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="resultA"
+        android:layout_marginStart="35dp"
+        android:layout_below="@+id/times"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/resultB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="resultB"
+        android:layout_below="@+id/resultA"
+        android:layout_alignEnd="@+id/resultA" />
+
+    <TextView
+        android:id="@+id/resultC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/resultB"
+        android:layout_below="@+id/resultB"
+        android:text="resultC" />
+
+    <TextView
+        android:id="@+id/offSetA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="offSetA"
+        android:layout_marginStart="37dp"
+        android:layout_below="@+id/times"
+        android:layout_toEndOf="@+id/times" />
+
+    <TextView
+        android:id="@+id/offSetB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="offSetB"
+        android:layout_above="@+id/offSetC"
+        android:layout_alignEnd="@+id/offSetC" />
+
+    <TextView
+        android:id="@+id/offSetC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="offSetC"
+        android:layout_alignBaseline="@+id/resultC"
+        android:layout_alignBottom="@+id/resultC"
+        android:layout_alignStart="@+id/offSetA" />
+
+
+    <!--</LinearLayout>-->
+    </RelativeLayout>

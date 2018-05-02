@@ -26,6 +26,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import tech.onetime.exhibitionDemo.R;
 import tech.onetime.exhibitionDemo.ble.BeaconScanCallback;
@@ -35,7 +36,7 @@ import tech.onetime.exhibitionDemo.schema.BeaconObject;
  * Created by joe on 2018/04/16
  */
 
-@EActivity(R.layout.activity_setting)
+@EActivity(R.layout.activity_exhibition)
 public class ExhibitionActivity extends AppCompatActivity implements BeaconScanCallback.iBeaconScanCallback,SensorEventListener {
 
     private static final String TAG = "ExhibitionActivity";
@@ -43,6 +44,12 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
     private BeaconScanCallback _beaconCallback;
     @ViewById ImageView areaImage;
     @ViewById TextView times;
+    @ViewById TextView resultA;
+    @ViewById TextView resultB;
+    @ViewById TextView resultC;
+    @ViewById TextView offSetA;
+    @ViewById TextView offSetB;
+    @ViewById TextView offSetC;
     // for AcceleroMeter
     @ViewById TextView active;
     private float[] mGravity;
@@ -131,7 +138,7 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
     int roundTimes = 0;
     @Override
     public void getNearestBeacon(BeaconObject beaconObject) {
-
+        Log.d(TAG, "[getNearestBeacon]" + beaconObject.getMajorMinorString() + "[time]"+beaconObject.time);
         times.setText(Integer.toString(++roundTimes));
 
     }
@@ -158,21 +165,35 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
         mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
         float delta = mAccelCurrent - mAccelLast;
         mAccel = mAccel * 0.9f + delta;
-
-        // Make this higher or lower according to how much
+       // Make this higher or lower according to how much
         // motion you want to detect
-        if(mAccel > 0.6){
+        if(mAccel > 0.8){
             // do something
             stopCount = 0;
         }else{
             stopCount++;
         }
+        times.setText("IsScanning = " + _beaconCallback.isScanning());
+
         if(stopCount >= MOTION_THRESHOLD){
             isMoving = false;
             active.setText("stop");
+//            Log.d(TAG, "[isScanning]_Stop" + _beaconCallback.isScanning());
+            if (_beaconCallback != null && !_beaconCallback.isScanning()){
+                _beaconCallback.startScan();
+                _beaconCallback.startTimerTask();
+            }
+
         }else{
             isMoving = true;
             active.setText("moving");
+            roundTimes = 0;
+//            Log.d(TAG, "[isScanning]_Moving" + _beaconCallback.isScanning());
+            if (_beaconCallback != null && _beaconCallback.isScanning()){
+                _beaconCallback.clearBeacons();
+                _beaconCallback.stopScan();
+                _beaconCallback.closeTimerTask();
+            }
         }
     }
 
@@ -227,37 +248,60 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
     }
 
     private String currentPosition = "";
+//    private Map<String,Integer> scoringSetClone = null;
     @Override
-    public void getCurrentPosition(String position) {
-        Log.d(TAG, "************************getCurrentPosition: " + position);
-        roundTimes = 0;
-        if(currentPosition != position && !isMoving){
-            currentPosition = position;
-            switch (position){
-                case "A":
-                    new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/A.png");
-                    break;
-                case "B":
-                    new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/B.png");
-                    break;
-                case "C":
-                    new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/C.png");
-                    break;
-//                case "critical":
-//                    new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/Critical.png");
-//                    break;
-//                case "not majority":
-//                    new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/Moving.png");
-//                    break;
+    public void getCurrentPosition(String position, final Map<String,Integer> scoringSet,final Map<String,Integer> offSet) {
+        Log.d(TAG, "[Activity]  getCurrentPosition: " + position);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Stuff that updates the UI
+                resultA.setText(Integer.toString(scoringSet.get("A")));
+                resultB.setText(Integer.toString(scoringSet.get("B")));
+                resultC.setText(Integer.toString(scoringSet.get("C")));
+                if(offSet.get("A") != null){
+                    offSetA.setText(Integer.toString(offSet.get("A")));
+                    offSetB.setText(Integer.toString(offSet.get("B")));
+                    offSetC.setText(Integer.toString(offSet.get("C")));
+                }
             }
+        });
+
+        roundTimes = 0;
+        if(!isMoving){
+            _beaconCallback.setPreviousScoringSet(scoringSet);
+            if(currentPosition != position ){
+    //            for(Map.Entry entry : scoringSetClone.entrySet()){
+    //                Log.d(TAG, "[scoringSetClone]" + "Key : " + entry.getKey() + " Value : " + entry.getValue());
+    //            }
+                currentPosition = position;
+                switch (position){
+                    case "A":
+                        new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/A.png");
+                        break;
+                    case "B":
+                        new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/B.png");
+                        break;
+                    case "C":
+                        new DownloadImageTask((ImageView) findViewById(R.id.areaImage)).execute("http://140.124.181.85:3000/image/C.png");
+                        break;
+                }
+            }
+
         }
 
-}
+    }
+
     protected void onDestroy(){
 
         super.onDestroy();
 
-        if (_beaconCallback != null) _beaconCallback.stopScan();
+        if (_beaconCallback != null) {
+            _beaconCallback.stopScan();
+            _beaconCallback.closeTimerTask();
+        }
 
         sensorManager.unregisterListener(this);
 

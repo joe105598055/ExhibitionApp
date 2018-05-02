@@ -11,7 +11,11 @@ import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import tech.onetime.exhibitionDemo.schema.BeaconObject;
 
@@ -33,7 +37,8 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     private long lastScannedTime = 0;
 //    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
     private ArrayList<ArrayList<BeaconObject>> eachRoundBeacon = new ArrayList<>();
-
+    private Boolean isScanning = false;
+    private Timer timer = null;
 
 
     public BeaconScanCallback(Context ctx, iBeaconScanCallback scanCallback) {
@@ -45,16 +50,46 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     }
 
+    public void startTimerTask(){
+        timer = new Timer();
+        timer.schedule(new timerTask(), 2000,2000L);
+    }
+
+    public void closeTimerTask(){
+        if(timer!=null){
+            timer.cancel();
+        }
+        Log.d(TAG, "closeTimerTask---------" + System.currentTimeMillis());
+
+    }
     public interface iBeaconScanCallback {
 
         void scannedBeacons(BeaconObject beaconObject);
 
         void getNearestBeacon(BeaconObject beaconObject);
 
-        void getCurrentPosition(String position);
+        void getCurrentPosition(String position,Map<String,Integer> scoringSet,Map<String,Integer> offSet);
 
     }
 
+    class timerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            ScoringAlgorithmV2 scoringAlgorithmV2;
+            if(_preScroingSet!=null){
+                scoringAlgorithmV2 = new ScoringAlgorithmV2(syncBeacons.getIns().getBeacons(),_preScroingSet);
+            }else {
+                scoringAlgorithmV2 = new ScoringAlgorithmV2(syncBeacons.getIns().getBeacons());
+            }
+            String currentPosition = scoringAlgorithmV2.getCurrentPosition();
+            Map<String,Integer> scoringSet = scoringAlgorithmV2.getScoringSet();
+            Map<String,Integer> offSet = scoringAlgorithmV2.getOffset();
+
+
+            scanCallback.getCurrentPosition(currentPosition,scoringSet,offSet);
+        }
+    }
     public void startScan() {
 
         int apiVersion = Build.VERSION.SDK_INT;
@@ -63,8 +98,18 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
             scan_lollipop();
         else scan_kitkat();
 
+        isScanning = true;
+
     }
 
+    private Map <String,Integer> _preScroingSet = null;
+    public void setPreviousScoringSet(Map<String,Integer> previousScroingSet) {
+        _preScroingSet = new HashMap<>(previousScroingSet);
+    }
+
+    public Boolean isScanning(){
+        return isScanning;
+    }
     /**
      * android 4.4
      */
@@ -162,24 +207,31 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
         }
 
+        isScanning = false;
+
     }
 
+    public void clearBeacons(){
+        Log.d(TAG, "[clearBeacons]");
+        syncBeacons.getIns().removeAllBeacons();
+    }
 
     private  void returnCallback(){
-        if (!canReturnCallback()){
-            return;
-        }
-        scanCallback.getNearestBeacon(syncBeacons.getIns().getNearest());
-        eachRoundBeacon.add(syncBeacons.getIns().getBeacons());
-        if(eachRoundBeacon.size() == 10){ // 10 round後，根據scoring result 判斷位置
-            String currentPosition = new ScoringAlgorithm(eachRoundBeacon).getCurrentPosition();
-            scanCallback.getCurrentPosition(currentPosition);
-            Log.d(TAG,"currentPosition = " + currentPosition);
-            eachRoundBeacon.clear();
-        }
-        syncBeacons.getIns().removeAllBeacons();
+//        if (!canReturnCallback()){
+//            return;
+//        }
+//        scanCallback.getNearestBeacon(syncBeacons.getIns().getNearest());
+//        eachRoundBeacon.add(syncBeacons.getIns().getBeacons());
+//        if(eachRoundBeacon.size() == 10){ // 10 round後，根據scoring result 判斷位置
+//            String currentPosition = new ScoringAlgorithm(eachRoundBeacon).getCurrentPosition();
+//            scanCallback.getCurrentPosition(currentPosition);
+//            Log.d(TAG,"currentPosition = " + currentPosition);
+//            eachRoundBeacon.clear();
+//        }
+//        syncBeacons.getIns().removeAllBeacons();
 
     }
+
 
     private static class syncBeacons {
 
@@ -200,8 +252,14 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
         public synchronized void addBeacon(BeaconObject beaconObject) {
             for (int i = 0; i < beacons.size(); i++) {
                 if (beacons.get(i).mac.equals(beaconObject.mac)) {
-                    beacons.remove(i);
-                    beacons.add(i, beaconObject);
+
+                    if(beacons.get(i).rssi <= beaconObject.rssi){
+                        beacons.remove(i);
+                        beacons.add(i, beaconObject);
+                    }
+// else{
+//                        beacons.get(i).time = beaconObject.time;
+//                    }
                     return;
                 }
             }
@@ -210,6 +268,12 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
         }
 
         public synchronized void removeAllBeacons() {
+//            long currentTime = System.currentTimeMillis();
+//            for(int i = 0; i < beacons.size(); i++){
+//                if(currentTime - beacons.get(i).time  > 3000)
+//                    beacons.remove(i);
+////                    i--;
+//            }
             beacons.clear();
         }
 
