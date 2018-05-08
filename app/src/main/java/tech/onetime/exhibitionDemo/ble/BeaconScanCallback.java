@@ -138,10 +138,12 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
         _filterBuilder.setDeviceName("USBeacon");
         scanFilters.add(_filterBuilder.build());
 
+
+
         ScanSettings.Builder scanSettingsBuilder = new ScanSettings.Builder();
-        scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
+//        scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
         scanSettingsBuilder.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
-//        scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+        scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
 //        scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
 
         BluetoothLeScanner scanner = mBluetoothAdapter.getBluetoothLeScanner();

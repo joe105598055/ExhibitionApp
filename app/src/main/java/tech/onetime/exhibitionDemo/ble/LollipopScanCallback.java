@@ -17,7 +17,7 @@ import tech.onetime.exhibitionDemo.schema.BeaconObject;
 public class LollipopScanCallback extends ScanCallback {
 
     private final String TAG = "LollipopScanCallback";
-//    private int triggerTimes = 0;
+    private int triggerTimes = 0;
 
     public iLollipopScanCallback iEvent;
 
@@ -30,17 +30,16 @@ public class LollipopScanCallback extends ScanCallback {
     @Override
     public void onScanResult(int callbackType, ScanResult result) {
 
-//        Log.d(TAG, "onScanResult__Trigger times : " + (++triggerTimes));
-
         // get the discovered device as you wish
         // this will trigger each time a new device is found
         BluetoothDevice device = result.getDevice();
+        Log.d(TAG, "[onScanResult]" + device.getName());
 
 //        Log.d(TAG, "onScanResult__device.getName() : " + device.getName());
 
-        if (device.getName() == null) {
-            return;
-        }
+//        if (device.getName() == null) {
+//            return;
+//        }
 
         ScanRecord record = result.getScanRecord();
 
@@ -71,6 +70,7 @@ public class LollipopScanCallback extends ScanCallback {
             iEvent.lollipop_beaconScanned(new BeaconObject(device, rssi, scanRecord_bytes, startByte));
         }
     }
+
 
     /*@Override
     public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
