@@ -52,24 +52,13 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     public void startTimerTask(){
         timer = new Timer();
-        timer.schedule(new timerTask(), 2000,2000L);
+        timer.schedule(new timerTask(), 2000L,2000L);
     }
 
     public void closeTimerTask(){
         if(timer!=null){
             timer.cancel();
         }
-        Log.d(TAG, "closeTimerTask---------" + System.currentTimeMillis());
-
-    }
-    public interface iBeaconScanCallback {
-
-        void scannedBeacons(BeaconObject beaconObject);
-
-        void getNearestBeacon(BeaconObject beaconObject);
-
-        void getCurrentPosition(String position,Map<String,Integer> scoringSet,Map<String,Integer> offSet);
-
     }
 
     class timerTask extends TimerTask {
@@ -90,6 +79,17 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
             scanCallback.getCurrentPosition(currentPosition,scoringSet,offSet);
         }
     }
+    public interface iBeaconScanCallback {
+
+        void scannedBeacons(BeaconObject beaconObject);
+
+        void getNearestBeacon(BeaconObject beaconObject);
+
+        void getCurrentPosition(String position,Map<String,Integer> scoringSet,Map<String,Integer> offSet);
+
+    }
+
+
     public void startScan() {
 
         int apiVersion = Build.VERSION.SDK_INT;

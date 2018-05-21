@@ -58,12 +58,12 @@ public class ScoringAlgorithmV2 {
         int ResultA = 0, ResultB = 0, ResultC = 0;
         int offSetA = 0, offSetB = 0, offSetC = 0;
 
-        int weightA = Math.max(beaconMap.get("(0,0)"),Math.max(beaconMap.get("(0,5)"),beaconMap.get("(0,8)"))) + 100;
-        int weightB = Math.max(beaconMap.get("(5,0)"),Math.max(beaconMap.get("(5,5)"),beaconMap.get("(5,8)"))) + 100;
-        int weightC = Math.max(beaconMap.get("(8,0)"),Math.max(beaconMap.get("(8,5)"),beaconMap.get("(8,8)"))) + 100;
-        int ScoringA = (beaconMap.get("(0,0)") + beaconMap.get("(0,5)") + beaconMap.get("(0,8)") + 300)  * weightA;
-        int ScoringB = (beaconMap.get("(5,0)") + beaconMap.get("(5,5)") + beaconMap.get("(5,8)") + 300) * weightB;
-        int ScoringC = (beaconMap.get("(8,0)") + beaconMap.get("(8,5)") + beaconMap.get("(8,8)") + 300) * weightC;
+        int weightA = Math.max(beaconMap.get("(0,0)"),Math.max(beaconMap.get("(0,2)"),beaconMap.get("(0,4)"))) + 100;
+        int weightB = Math.max(beaconMap.get("(5,11)"),Math.max(beaconMap.get("(5,13)"),beaconMap.get("(5,15)"))) + 100;
+        int weightC = Math.max(beaconMap.get("(8,22)"),Math.max(beaconMap.get("(8,24)"),beaconMap.get("(8,26)"))) + 100;
+        int ScoringA = (beaconMap.get("(0,0)") + beaconMap.get("(0,2)") + beaconMap.get("(0,4)") + 300)  * weightA;
+        int ScoringB = (beaconMap.get("(5,11)") + beaconMap.get("(5,13)") + beaconMap.get("(5,15)") + 300) * weightB;
+        int ScoringC = (beaconMap.get("(8,22)") + beaconMap.get("(8,24)") + beaconMap.get("(8,26)") + 300) * weightC;
         scoringClone.put("A",ScoringA);
         scoringClone.put("B",ScoringB);
         scoringClone.put("C",ScoringC);
@@ -122,14 +122,14 @@ public class ScoringAlgorithmV2 {
     private void initMap(){
         beaconMap.clear();
         beaconMap.put("(0,0)",-100);
-        beaconMap.put("(0,5)",-100);
-        beaconMap.put("(0,8)",-100);
-        beaconMap.put("(5,0)",-100);
-        beaconMap.put("(5,5)",-100);
-        beaconMap.put("(5,8)",-100);
-        beaconMap.put("(8,0)",-100);
-        beaconMap.put("(8,5)",-100);
-        beaconMap.put("(8,8)",-100);
+        beaconMap.put("(0,2)",-100);
+        beaconMap.put("(0,4)",-100);
+        beaconMap.put("(5,11)",-100);
+        beaconMap.put("(5,13)",-100);
+        beaconMap.put("(5,15)",-100);
+        beaconMap.put("(8,22)",-100);
+        beaconMap.put("(8,24)",-100);
+        beaconMap.put("(8,26)",-100);
 
     }
 

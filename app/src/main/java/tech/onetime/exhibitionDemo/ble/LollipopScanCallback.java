@@ -71,7 +71,6 @@ public class LollipopScanCallback extends ScanCallback {
         }
     }
 
-
     /*@Override
     public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
         System.out.println("--------------------batch scan--------------------\nresults:" + results.size());
