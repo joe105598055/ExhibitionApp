@@ -95,5 +95,9 @@ public class BeaconObject implements Serializable{
         return "(" + major + "," + minor + ")";
     }
 
+    public String getMajor(){
+        return Integer.toString(major);
+    }
+
 
 }

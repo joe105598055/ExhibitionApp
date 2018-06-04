@@ -33,7 +33,6 @@ public class LollipopScanCallback extends ScanCallback {
         // get the discovered device as you wish
         // this will trigger each time a new device is found
         BluetoothDevice device = result.getDevice();
-        Log.d(TAG, "[onScanResult]" + device.getName());
 
 //        Log.d(TAG, "onScanResult__device.getName() : " + device.getName());
 
@@ -61,7 +60,7 @@ public class LollipopScanCallback extends ScanCallback {
                 patternFound = true;
                 break;
             }
-            startByte++;
+            startByte++;;
         }
 
 //        Log.d(TAG, "patternFound : " + patternFound);

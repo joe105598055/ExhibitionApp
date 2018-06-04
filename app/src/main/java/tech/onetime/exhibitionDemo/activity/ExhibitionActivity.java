@@ -136,12 +136,6 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
     }
 
     int roundTimes = 0;
-    @Override
-    public void getNearestBeacon(BeaconObject beaconObject) {
-        Log.d(TAG, "[getNearestBeacon]" + beaconObject.getMajorMinorString() + "[time]"+beaconObject.time);
-        times.setText(Integer.toString(++roundTimes));
-
-    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -250,7 +244,7 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
     private String currentPosition = "";
 //    private Map<String,Integer> scoringSetClone = null;
     @Override
-    public void getCurrentPosition(String position, final Map<String,Integer> scoringSet,final Map<String,Integer> offSet) {
+    public void getCurrentPosition(String position, final Map<String,Integer> pointSet,final Map<String,Integer> deltaSet) {
         Log.d(TAG, "[Activity]  getCurrentPosition: " + position);
 
         runOnUiThread(new Runnable() {
@@ -258,20 +252,20 @@ public class ExhibitionActivity extends AppCompatActivity implements BeaconScanC
             public void run() {
 
                 // Stuff that updates the UI
-                resultA.setText(Integer.toString(scoringSet.get("A")));
-                resultB.setText(Integer.toString(scoringSet.get("B")));
-                resultC.setText(Integer.toString(scoringSet.get("C")));
-                if(offSet.get("A") != null){
-                    offSetA.setText(Integer.toString(offSet.get("A")));
-                    offSetB.setText(Integer.toString(offSet.get("B")));
-                    offSetC.setText(Integer.toString(offSet.get("C")));
+                resultA.setText(Integer.toString(pointSet.get("A")));
+                resultB.setText(Integer.toString(pointSet.get("B")));
+                resultC.setText(Integer.toString(pointSet.get("C")));
+                if(deltaSet.get("A") != null){
+                    offSetA.setText(Integer.toString(deltaSet.get("A")));
+                    offSetB.setText(Integer.toString(deltaSet.get("B")));
+                    offSetC.setText(Integer.toString(deltaSet.get("C")));
                 }
             }
         });
 
         roundTimes = 0;
         if(!isMoving){
-            _beaconCallback.setPreviousScoringSet(scoringSet);
+            _beaconCallback.setPreviousScoringSet(pointSet);
             if(currentPosition != position ){
     //            for(Map.Entry entry : scoringSetClone.entrySet()){
     //                Log.d(TAG, "[scoringSetClone]" + "Key : " + entry.getKey() + " Value : " + entry.getValue());

@@ -65,25 +65,23 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
         @Override
         public void run() {
-            ScoringAlgorithmV2 scoringAlgorithmV2;
+            ScoringAlgorithm scoringAlgorithm;
             if(_preScroingSet!=null){
-                scoringAlgorithmV2 = new ScoringAlgorithmV2(syncBeacons.getIns().getBeacons(),_preScroingSet);
+                scoringAlgorithm = new ScoringAlgorithm(syncBeacons.getIns().getBeacons(),_preScroingSet);
             }else {
-                scoringAlgorithmV2 = new ScoringAlgorithmV2(syncBeacons.getIns().getBeacons());
+                scoringAlgorithm = new ScoringAlgorithm(syncBeacons.getIns().getBeacons());
             }
-            String currentPosition = scoringAlgorithmV2.getCurrentPosition();
-            Map<String,Integer> scoringSet = scoringAlgorithmV2.getScoringSet();
-            Map<String,Integer> offSet = scoringAlgorithmV2.getOffset();
+            String currentPosition = scoringAlgorithm.getCurrentPosition();
+            Map<String,Integer> scoringSet = scoringAlgorithm.getPointClone();
+            Map<String,Integer> deltaSet = scoringAlgorithm.getDeltaSet();
 
 
-            scanCallback.getCurrentPosition(currentPosition,scoringSet,offSet);
+            scanCallback.getCurrentPosition(currentPosition,scoringSet,deltaSet);
         }
     }
     public interface iBeaconScanCallback {
 
         void scannedBeacons(BeaconObject beaconObject);
-
-        void getNearestBeacon(BeaconObject beaconObject);
 
         void getCurrentPosition(String position,Map<String,Integer> scoringSet,Map<String,Integer> offSet);
 
