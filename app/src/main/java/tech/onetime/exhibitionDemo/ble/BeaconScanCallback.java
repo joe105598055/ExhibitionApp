@@ -35,7 +35,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     private BluetoothAdapter mBluetoothAdapter;
     private ScanFilter.Builder _filterBuilder;
     private long lastScannedTime = 0;
-//    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
+    //    private ArrayList<BeaconObject> eachRoundBeacon = new ArrayList<BeaconObject>();
     private ArrayList<ArrayList<BeaconObject>> eachRoundBeacon = new ArrayList<>();
     private Boolean isScanning = false;
     private Timer timer = null;
@@ -50,13 +50,13 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     }
 
-    public void startTimerTask(){
+    public void startTimerTask() {
         timer = new Timer();
-        timer.schedule(new timerTask(), 2000L,2000L);
+        timer.schedule(new timerTask(), 2000L, 2000L);
     }
 
-    public void closeTimerTask(){
-        if(timer!=null){
+    public void closeTimerTask() {
+        if (timer != null) {
             timer.cancel();
         }
     }
@@ -66,24 +66,25 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
         @Override
         public void run() {
             ScoringAlgorithm scoringAlgorithm;
-            if(_preScroingSet!=null){
-                scoringAlgorithm = new ScoringAlgorithm(syncBeacons.getIns().getBeacons(),_preScroingSet);
-            }else {
+            if (_preScroingSet != null) {
+                scoringAlgorithm = new ScoringAlgorithm(syncBeacons.getIns().getBeacons(), _preScroingSet);
+            } else {
                 scoringAlgorithm = new ScoringAlgorithm(syncBeacons.getIns().getBeacons());
             }
             String currentPosition = scoringAlgorithm.getCurrentPosition();
-            Map<String,Integer> scoringSet = scoringAlgorithm.getPointClone();
-            Map<String,Integer> deltaSet = scoringAlgorithm.getDeltaSet();
+            Map<String, Integer> scoringSet = scoringAlgorithm.getPointClone();
+            Map<String, Integer> deltaSet = scoringAlgorithm.getDeltaSet();
 
 
-            scanCallback.getCurrentPosition(currentPosition,scoringSet,deltaSet);
+            scanCallback.getCurrentPosition(currentPosition, scoringSet, deltaSet);
         }
     }
+
     public interface iBeaconScanCallback {
 
         void scannedBeacons(BeaconObject beaconObject);
 
-        void getCurrentPosition(String position,Map<String,Integer> scoringSet,Map<String,Integer> offSet);
+        void getCurrentPosition(String position, Map<String, Integer> scoringSet, Map<String, Integer> offSet);
 
     }
 
@@ -100,14 +101,16 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     }
 
-    private Map <String,Integer> _preScroingSet = null;
-    public void setPreviousScoringSet(Map<String,Integer> previousScroingSet) {
+    private Map<String, Integer> _preScroingSet = null;
+
+    public void setPreviousScoringSet(Map<String, Integer> previousScroingSet) {
         _preScroingSet = new HashMap<>(previousScroingSet);
     }
 
-    public Boolean isScanning(){
+    public Boolean isScanning() {
         return isScanning;
     }
+
     /**
      * android 4.4
      */
@@ -132,10 +135,9 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
         lollipopScanCallback = new LollipopScanCallback(this);
 
         List<ScanFilter> scanFilters = new ArrayList<>();
-        if(_filterBuilder == null) _filterBuilder = new ScanFilter.Builder();
+        if (_filterBuilder == null) _filterBuilder = new ScanFilter.Builder();
         _filterBuilder.setDeviceName("USBeacon");
         scanFilters.add(_filterBuilder.build());
-
 
 
         ScanSettings.Builder scanSettingsBuilder = new ScanSettings.Builder();
@@ -152,7 +154,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
     @TargetApi(Build.VERSION_CODES.M)
     public void setScanFilter_address(String deviceAddress) {
 
-        if(_filterBuilder == null) _filterBuilder = new ScanFilter.Builder();
+        if (_filterBuilder == null) _filterBuilder = new ScanFilter.Builder();
         _filterBuilder.setDeviceAddress(deviceAddress);
 
     }
@@ -165,24 +167,21 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
      */
     @Override
     public void kitkat_beaconScanned(BeaconObject beaconObject) {
-            syncBeacons.getIns().addBeacon(beaconObject);
-            scanCallback.scannedBeacons(beaconObject);
-            returnCallback();
+        syncBeacons.getIns().addBeacon(beaconObject);
+        scanCallback.scannedBeacons(beaconObject);
 
     }
 
     /**
      * lollipop - 偵測到 beacon
      *
-     * @param beaconObject  is the object include beacon attribute
+     * @param beaconObject is the object include beacon attribute
      */
     @Override
     public void lollipop_beaconScanned(BeaconObject beaconObject) {
 
         syncBeacons.getIns().addBeacon(beaconObject);
         scanCallback.scannedBeacons(beaconObject);
-        returnCallback();
-
 
     }
 
@@ -211,25 +210,9 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
 
     }
 
-    public void clearBeacons(){
+    public void clearBeacons() {
         Log.d(TAG, "[clearBeacons]");
         syncBeacons.getIns().removeAllBeacons();
-    }
-
-    private  void returnCallback(){
-//        if (!canReturnCallback()){
-//            return;
-//        }
-//        scanCallback.getNearestBeacon(syncBeacons.getIns().getNearest());
-//        eachRoundBeacon.add(syncBeacons.getIns().getBeacons());
-//        if(eachRoundBeacon.size() == 10){ // 10 round後，根據scoring result 判斷位置
-//            String currentPosition = new ScoringAlgorithm(eachRoundBeacon).getCurrentPosition();
-//            scanCallback.getCurrentPosition(currentPosition);
-//            Log.d(TAG,"currentPosition = " + currentPosition);
-//            eachRoundBeacon.clear();
-//        }
-//        syncBeacons.getIns().removeAllBeacons();
-
     }
 
 
@@ -253,7 +236,7 @@ public class BeaconScanCallback implements KitkatScanCallback.iKitkatScanCallbac
             for (int i = 0; i < beacons.size(); i++) {
                 if (beacons.get(i).mac.equals(beaconObject.mac)) {
 
-                    if(beacons.get(i).rssi <= beaconObject.rssi){
+                    if (beacons.get(i).rssi <= beaconObject.rssi) {
                         beacons.remove(i);
                         beacons.add(i, beaconObject);
                     }

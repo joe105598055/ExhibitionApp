@@ -21,8 +21,6 @@ public class LollipopScanCallback extends ScanCallback {
 
     public iLollipopScanCallback iEvent;
 
-    private BeaconObject beaconObject;
-
     public LollipopScanCallback(iLollipopScanCallback iEvent) {
         this.iEvent = iEvent;
     }
