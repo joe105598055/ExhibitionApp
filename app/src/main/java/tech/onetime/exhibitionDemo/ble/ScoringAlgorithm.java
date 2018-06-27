@@ -52,18 +52,24 @@ public class ScoringAlgorithm {
     private void initMap(){
 
         for(BeaconObject beaconObject : beacons){
-
-            if(beaconObject.getMajor() == "0"){
+            Log.d(TAG, "[eachBeacon] = " + beaconObject.getMajorMinorString());
+            Log.d(TAG, "[eachBeacon]----" + beaconObject.getClass());
+            if(beaconObject.getMajor().equals("0")){
 
                 aList.add(beaconObject.rssi + 100);
+                Log.d(TAG, "A");
 
-            }else if(beaconObject.getMajor() == "5"){
+            }else if(beaconObject.getMajor().equals("5")){
 
                 bList.add(beaconObject.rssi + 100);
+                Log.d(TAG, "B");
+
 
             }else{
 
                 cList.add(beaconObject.rssi + 100);
+                Log.d(TAG, "C");
+
 
             }
 

@@ -12,26 +12,27 @@
     android:id="@+id/root"
     tools:context="tech.onetime.beaconRecorder.activity.initActivityV3">
 
-    <ImageView
+    <TextView
         android:id="@+id/initLogo"
         android:gravity="center_horizontal"
-        android:src="@mipmap/homepage_icon"
+        android:text="Scoring Algo."
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:minHeight="250dp"
         android:minWidth="250dp"
+        android:textSize="80sp"
         android:layout_marginBottom="119dp"
         android:layout_above="@+id/entry"
         android:layout_centerHorizontal="true" />
-    <Button
-        android:text="@string/entry"
-        android:layout_width="271dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/entry"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/entry_exhibition_button"
-        android:layout_marginBottom="51dp" />
+<Button
+    android:text="@string/entry"
+    android:layout_width="271dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/entry"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/entry_exhibition_button"
+    android:layout_marginBottom="51dp" />
 
 
 </RelativeLayout>
